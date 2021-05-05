@@ -2,14 +2,32 @@ package application;
 
 public class Vacances 
 {
+	
 	private String prenom;
+	private String nom;
 	private String destination;
 	private Double transport;
 	private Double hotel;
 	private Double total;
 	
+	//contructeur vide
+	public Vacances()
+	{
+		this(null,null);
+	}
 	
+	//contructeur avec 2 paramètres
+	public Vacances(String prenom, String nom)
+	{
+		this.prenom=prenom;
+		this.nom=nom;
+		this.destination="";
+		this.transport=0.0;
+		this.hotel=0.0;
+		this.total=0.0;
+	}
 	
+	//getters and setters
 	public String getPrenom() {
 		return prenom;
 	}
@@ -46,7 +64,7 @@ public class Vacances
 	public void setTotal(Double total) {
 		this.total = total;
 	}
-	private String nom;
+	
 	
 	
 	
