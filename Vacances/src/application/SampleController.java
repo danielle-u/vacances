@@ -47,12 +47,6 @@ public class SampleController implements Initializable{
 	private Button btnClear;
 
 	@FXML
-	private Label lblTotal;
-
-	@FXML
-	private Button btnCalcul;
-
-	@FXML
 	private TableColumn<Vacance, Double> transportColumn;
 
 	@FXML
@@ -87,6 +81,8 @@ public class SampleController implements Initializable{
 
 	@FXML
 	private TextField txtNom;
+
+	private Double pTotal=0.0;
 
 	//liste pour les déstinations - cette liste permettera de donner des valeurs du combobox
 	private ObservableList<String> list=(ObservableList<String>) FXCollections.observableArrayList("Paris", "Londres", "Toronto", "Honolulu", "Rio de Janeiro");
@@ -146,15 +142,6 @@ public class SampleController implements Initializable{
 			}
 		});
 
-		lblTotal.textProperty().addListener((observable, oldValue, newValue) ->
-		{
-			if(!newValue.matches("^[0-9](\\.[0-9]+)?$"))
-			{
-				//si le imput est non numérique, ca le remplace 
-				lblTotal.setText(newValue.replaceAll("[^\\d*\\.]",""));
-			}
-		});
-
 	}
 
 	//vérifier champs vides
@@ -180,10 +167,6 @@ public class SampleController implements Initializable{
 		if(txtHotel.getText()==null || txtHotel.getText().length()==0)
 		{
 			errorMessage+="Le champ hotel de doit pas etre vide! \n";
-		}
-		if(lblTotal.getText()==null || lblTotal.getText().length()==0)
-		{
-			errorMessage+="Le champ total de doit pas etre vide! \n";
 		}
 		if(errorMessage.length()==0)
 		{
@@ -215,7 +198,10 @@ public class SampleController implements Initializable{
 			tmp.setDestination(cboDestination.getValue());
 			tmp.setTransport(Double.parseDouble(txtTransport.getText()));
 			tmp.setHotel(Double.parseDouble(txtHotel.getText()));
-			tmp.setTotal(lblTotal.getText());
+			Double prixT = Double.parseDouble(txtTransport.getText());
+			Double prixH = Double.parseDouble(txtHotel.getText());
+			Double tot= prixT + prixH;
+			tmp.setTotal(tot);
 			vacanceData.add(tmp);
 			clearFields();
 		}
@@ -230,7 +216,6 @@ public class SampleController implements Initializable{
 		cboDestination.setValue(null);
 		txtTransport.setText("");
 		txtHotel.setText("");
-		lblTotal.setText("");
 
 	}
 
@@ -244,7 +229,6 @@ public class SampleController implements Initializable{
 			cboDestination.setValue(vacance.getDestination());
 			txtTransport.setText(Double.toString(vacance.getTransport()));
 			txtHotel.setText(Double.toString(vacance.getHotel()));
-			lblTotal.setText(vacance.getTotal());
 			btnModifier.setDisable(false);
 			btnEffacer.setDisable(false);
 			btnClear.setDisable(false);
@@ -271,7 +255,6 @@ public class SampleController implements Initializable{
 			vacance.setDestination(cboDestination.getValue());
 			vacance.setTransport(Double.parseDouble(txtTransport.getText()));
 			vacance.setHotel(Double.parseDouble(txtHotel.getText()));
-			vacance.setTotal(lblTotal.getText());
 			vacancesTable.refresh(); 
 		}
 	}
@@ -290,21 +273,6 @@ public class SampleController implements Initializable{
 			if(result.get()==ButtonType.OK)
 				vacancesTable.getItems().remove(selectedIndex);
 		}
-	}
-
-	//calculer le total
-	@FXML
-	void calculVacance(ActionEvent e)
-	{
-		int numTransport = Integer.parseInt(txtTransport.getText());
-		int numHotel = Integer.parseInt(txtHotel.getText());
-		int res=0;
-		Button btnCalcul = (Button)e.getSource();
-
-		if(btnCalcul.getId().equals("add"))
-			res=numTransport + numHotel;
-
-		lblTotal.setText(Integer.toString(res));
 	}
 
 	//afficher les statistiques du prix de transport
